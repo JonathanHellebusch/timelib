@@ -12,14 +12,14 @@
 
 /******
 *
-* Bezeichner: isLeapYear
+* Bezeichner: is_leapyear
 *
 * Übergabeparameter: int year
 *
 * Rückgabewert: int
 *               0, wenn das Jahr kein Schalltjahr ist
 *               1, wenn das Jahr ein Schalltjahr ist
-*              -1, wenn das Jahr kleiner als 1582 ist
+*              -1, wenn das Jahr kleiner als 1582 ist oder größer als 2400
 *
 * Beschreibung: Die Funktion ermittelt für ein übergebenes Jahr, ob es sich um ein Schaltjahr handelt
 *
@@ -69,6 +69,21 @@ int is_leapyear(int year)
     return result;
 }
 
+/******
+*
+* Bezeichner: get_days_for_month
+*
+* Übergabeparameter: int month, int year
+*
+* Rückgabewert: int
+*         28 - 31, wenn kein Fehler aufkommt :)
+*              -1, wenn das Jahr kleiner als 1582 ist oder größer als 2400
+*                  oder wenn der Monat nicht eine zahl von 1 - 12 ist
+*                  oder die Funktion is_leapyear eine -1 wiedergibt
+*
+* Beschreibung: Die Funktion gibt die Anzahl der Tage des übergebenen Monaths zurück
+*
+*****/
 int get_days_for_month(int month, int year)
 {
     const int monthDays[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
@@ -95,6 +110,21 @@ int get_days_for_month(int month, int year)
     }
 }
 
+/******
+*
+* Bezeichner: exists_date
+*
+* Übergabeparameter: int day, int month, int year
+*
+* Rückgabewert: int
+*              1, wenn der Tag existiert
+*              0, wenn das Jahr kleiner als 1582 ist oder größer als 2400
+*                  oder wenn der Monat nicht eine zahl von 1 - 12 ist
+*                  oder die Funktion get_days_for_month eine -1 wiedergibt
+*
+* Beschreibung: Die Funktion prüft ob ein bestimmtes Datum existiert
+*
+*****/
 int exists_date(int day, int month, int year)
 {
     int result = 0;
@@ -123,9 +153,22 @@ int exists_date(int day, int month, int year)
     return result;
 }
 
+/******
+*
+* Bezeichner: day_of_the_year
+*
+* Übergabeparameter: int day, int month, int year
+*
+* Rückgabewert: int
+*          1 - 366, wenn das Datum existiert
+*               -1, wenn das Datum nicht existiert
+*
+* Beschreibung: Die Funktion gibt die Anzahl der Tage die in dem Jahr schon vorrüber sind an
+*
+*****/
 int day_of_the_year(int day, int month, int year)
 {
-    if(exists_date(day,month,year) == 1)
+    if(exists_date(day,month,year))
     {
         int totalDays = day;
         for(int i=1; i<month; i++)
@@ -140,8 +183,19 @@ int day_of_the_year(int day, int month, int year)
     }
 }
 
+
+/******
+*
+* Bezeichner: main
+*
+* Beschreibung: Testfunktion
+*
+
 int main()
 {
-    printf("Tag des Jahres: %i\n", day_of_the_year(1, 1, 2018));
+    printf("Tag: %i\n", exists_date(29, 3, 2018));
     return 0;
 }
+
+*
+*****/
