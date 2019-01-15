@@ -22,7 +22,19 @@
 
 int main()
 {
-    printf("Tag: %i\n", exists_date(29, 3, 2018));
+    const char *a[7];
+    a[3] = "Donnerstag";
+    a[4] = "Freitag";
+    a[5] = "Samstag";
+    a[6] = "Sonntag";
+    a[0] = "Montag";
+    a[1] = "Dienstag";
+    a[2] = "Mittwoch";
+
+    int day = 26, month = 2, year = 1997;
+
+    printf("Tag:       %i.%i.%i\nWochentag: %s\n", day, month, year, a[day_of_the_week(day,month,year)]);
+    //system("pause>nul");
     return 0;
 }
 

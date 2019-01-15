@@ -3,6 +3,8 @@
 
 # other files
 *.layout
+*.cbp
+*.depend
 
 # Object files
 *.o

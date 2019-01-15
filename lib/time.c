@@ -182,3 +182,44 @@ int day_of_the_year(int day, int month, int year)
         return -1;
     }
 }
+
+/******
+*
+* Bezeichner: day_of_week
+*
+* Übergabeparameter: int day, int month, int year
+*
+* Rückgabewert: int
+*            0 - 6, für den Wochentag Montag = 0 und so weiter ..
+*               -1, wenn das Datum nicht existiert
+*
+* Beschreibung: Die Funktion gibt den Wochentag an mit einer zahl von 0-6
+*
+*****/
+int day_of_the_week(int day, int month, int year)
+{
+    int dayDifference = 0;
+    if(exists_date(day,month,year))
+    {
+        if(year > 1582)
+        {
+            for(int i=1582; i<year; i++)
+            {
+                dayDifference += (365 + is_leapyear(i));
+            }
+        }
+        if(month > 1)
+        {
+            for(int i=1; i<month; i++)
+            {
+                dayDifference += get_days_for_month(i, year);
+            }
+        }
+        dayDifference += day;
+        return ((dayDifference + 3) % 7);
+    }
+    else
+    {
+        return -1;
+    }
+}
