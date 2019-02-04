@@ -71,6 +71,51 @@ int is_leapyear(int year)
 
 /******
 *
+* Bezeichner:
+*
+* Übergabeparameter:
+*
+* Rückgabewert:
+*
+* Beschreibung:
+*
+*****/
+void input_date(int *day, int *month, int *year)
+{
+    const int ARRAY_LEN = 11;
+    int bool_valid = 0;
+    char a[ARRAY_LEN];
+    int temp_date[] = {0, 0, 0};
+    do
+    {
+        fgets(a,ARRAY_LEN,stdin);
+
+        for(int i=0, j=0, k=0; i<ARRAY_LEN-1; i++)
+        {
+            if(a[i] == '.' || a[i] == '/')
+            {
+                a[i] = '\0';
+                temp_date[j] = atoi(a[k]);
+                k = i + 1;
+                j++;
+                printf("%s\n", a[k]);
+                printf("%i\t%i\t%i\n", i,j,k);
+            }
+        }
+        if(exists_date(temp_date[0],temp_date[1],temp_date[2]))
+        {
+            bool_valid = 1;
+            *day = temp_date[0];
+            *month = temp_date[1];
+            *year = temp_date[2];
+        }
+    }while(!bool_valid);
+
+    return;
+}
+
+/******
+*
 * Bezeichner: get_days_for_month
 *
 * Übergabeparameter: int month, int year

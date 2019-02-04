@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="lib/time.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="lib/time.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

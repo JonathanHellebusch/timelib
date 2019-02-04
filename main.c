@@ -56,19 +56,11 @@ int test()
 
 int main()
 {
-    const char *a[7];
-    a[3] = "Donnerstag";
-    a[4] = "Freitag";
-    a[5] = "Samstag";
-    a[6] = "Sonntag";
-    a[0] = "Montag";
-    a[1] = "Dienstag";
-    a[2] = "Mittwoch";
+    int day,month,year;
+    printf("Bitte Datum eingeben: ");
+    input_date(&day,&month,&year);
+    printf("\n\nTag: %i\nMonat: %i\nJahr: %i\n", day, month, year);
 
-    int day = 26, month = 2, year = 1997;
-
-    printf("Tag:       %i.%i.%i\nWochentag: %s\n", day, month, year, a[day_of_the_week(day,month,year)]);
-    //system("pause>nul");
     return 0;
 }
 
