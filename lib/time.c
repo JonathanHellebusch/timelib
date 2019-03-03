@@ -11,11 +11,13 @@
 #include <stdlib.h>
 #include "time.h"
 
+#define ARRAY_LEN 11
+
 /******
 *
 * Bezeichner: is_leapyear
 *
-* Übergabeparameter: struct date_struct tempDate
+* Übergabeparameter: struct date_struct temp_date
 *
 * Rückgabewert: int
 *               0, wenn das Jahr kein Schalltjahr ist
@@ -26,22 +28,22 @@
 *
 *****/
 
-int is_leapyear(struct date_struct tempDate)
+int is_leapyear(struct date_struct temp_date)
 {
     //Variablen für die Rechnungen mit Modulo
-    int Dvier = 0, Dhundert = 0, Dvierhundert = 0, result = 0;
+    int divided_by_four = 0, divided_by_hundred = 0, divided_by_fourhundred = 0, result = 0;
 
     //Rechnung der Modulo-Werte
-    Dvier = tempDate.year % 4;
-    Dhundert = tempDate.year % 100;
-    Dvierhundert = tempDate.year % 400;
+    divided_by_four = temp_date.year % 4;
+    divided_by_hundred = temp_date.year % 100;
+    divided_by_fourhundred = temp_date.year % 400;
 
     //Ermittlung ob das Jahr ein schalltjahr ist
-    if (Dvier == 0)
+    if (divided_by_four == 0)
     {
-        if (Dhundert == 0)
+        if (divided_by_hundred == 0)
         {
-            if (Dvierhundert == 0)
+            if (divided_by_fourhundred == 0)
             {
                 result = 1;
             }
@@ -61,7 +63,7 @@ int is_leapyear(struct date_struct tempDate)
     }
 
     // Einführungsjahr des Schaltjahres
-    if (tempDate.year < 1582 || tempDate.year > 2400)
+    if (temp_date.year < 1582 || temp_date.year > 2400)
     {
         result = -1;
     }
@@ -74,43 +76,44 @@ int is_leapyear(struct date_struct tempDate)
 *
 * Bezeichner: input_date
 *
-* Übergabeparameter: struct date_struct *tempDate
+* Übergabeparameter: struct date_struct *temp_date
 *
 * Beschreibung:Einlesen der einzelnen Zahlen für das Datum
 *
 *****/
-void input_date(struct date_struct *tempDate)
+
+void input_date(struct date_struct *temp_date)
 {
-    const int ARRAY_LEN = 11;
     int bool_valid = 0;
-    char a[ARRAY_LEN];
-    int temp_date[] = {0, 0, 0};
+    char input[ARRAY_LEN];
+    int temp_date_array[] = {0, 0, 0};
     do
     {
-        fgets(a,ARRAY_LEN,stdin);
+        fgets(input,ARRAY_LEN,stdin);
 
         for(int i=0, j=0, k=0; i<ARRAY_LEN-1; i++)
         {
-            if(a[i] == '.' || a[i] == '/')
+            if(input[i] == '.' || input[i] == '/')
             {
-                a[i] = '\0';
-                temp_date[j] = atoi(a[k]);
+                input[i] = '\0';
+                temp_date_array[j] = atoi(input[k]);
                 k = i + 1;
                 j++;
-                printf("%s\n", a[k]);
+                printf("%s\n", input[k]);
                 printf("%i\t%i\t%i\n", i,j,k);
             }
         }
-        struct date_struct tdmy;
-        tdmy.day = temp_date[0];
-        tdmy.month = temp_date[1];
-        tdmy.year = temp_date[2];
-        if(exists_date(tdmy))
+        struct date_struct temp_day_month_year;
+        temp_day_month_year.day = temp_date_array[0];
+        temp_day_month_year.month = temp_date_array[1];
+        temp_day_month_year.year = temp_date_array[2];
+
+        if(exists_date(temp_day_month_year))
         {
             bool_valid = 1;
-            *tempDate.day = temp_date[0];
-            *tempDate.month = temp_date[1];
-            *tempDate.year = temp_date[2];
+            temp_date->day = temp_date_array[0];
+            temp_date->month = temp_date_array[1];
+            temp_date->year = temp_date_array[2];
         }
     }while(!bool_valid);
 
@@ -121,7 +124,7 @@ void input_date(struct date_struct *tempDate)
 *
 * Bezeichner: get_days_for_month
 *
-* Übergabeparameter: struct date_struct tempDate
+* Übergabeparameter: struct date_struct temp_date
 *
 * Rückgabewert: int
 *         28 - 31, wenn kein Fehler aufkommt :)
@@ -132,19 +135,20 @@ void input_date(struct date_struct *tempDate)
 * Beschreibung: Die Funktion gibt die Anzahl der Tage des übergebenen Monaths zurück
 *
 *****/
-int get_days_for_month(struct date_struct tempDate)
+
+int get_days_for_month(struct date_struct temp_date)
 {
-    const int monthDays[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
-    if (tempDate.year < 1582 || tempDate.year > 2400 || tempDate.month < 1 || tempDate.month > 12)
+    const int month_days[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    if (temp_date.year < 1582 || temp_date.year > 2400 || temp_date.month < 1 || temp_date.month > 12)
     {
         return -1;
     }
     else
     {
-        int days = monthDays[tempDate.month-1];
-        if(month == 2)
+        int days = month_days[temp_date.month-1];
+        if(temp_date.month == 2)
         {
-            int result = is_leapyear(tempDate);
+            int result = is_leapyear(temp_date);
             if(result == -1)
             {
                 return -1;
@@ -162,7 +166,7 @@ int get_days_for_month(struct date_struct tempDate)
 *
 * Bezeichner: exists_date
 *
-* Übergabeparameter: struct date_struct tempDate
+* Übergabeparameter: struct date_struct temp_date
 *
 * Rückgabewert: int
 *              1, wenn der Tag existiert
@@ -173,14 +177,15 @@ int get_days_for_month(struct date_struct tempDate)
 * Beschreibung: Die Funktion prüft ob ein bestimmtes Datum existiert
 *
 *****/
-int exists_date(struct date_struct tempDate)
+
+int exists_date(struct date_struct temp_date)
 {
     int result = 0;
-    if (tempDate.year >= 1582 && tempDate.year <= 2400)
+    if (temp_date.year >= 1582 && temp_date.year <= 2400)
     {
-        if (tempDate.month >= 1 && tempDate.month <= 12)
+        if (temp_date.month >= 1 && temp_date.month <= 12)
         {
-            if(tempDate.day >= 1 && tempDate.day <= get_days_for_month(tempDate))
+            if(temp_date.day >= 1 && temp_date.day <= get_days_for_month(temp_date))
             {
                 result = 1;
             }
@@ -205,7 +210,7 @@ int exists_date(struct date_struct tempDate)
 *
 * Bezeichner: day_of_the_year
 *
-* Übergabeparameter: struct date_struct tempDate
+* Übergabeparameter: struct date_struct temp_date
 *
 * Rückgabewert: int
 *          1 - 366, wenn das Datum existiert
@@ -214,20 +219,21 @@ int exists_date(struct date_struct tempDate)
 * Beschreibung: Die Funktion gibt die Anzahl der Tage die in dem Jahr schon vorrüber sind an
 *
 *****/
-int day_of_the_year(struct date_struct tempDate)
+
+int day_of_the_year(struct date_struct temp_date)
 {
-    if(exists_date(tempDate))
+    if(exists_date(temp_date))
     {
-        int totalDays = day;
-        for(int i=1; i<tempDate.month; i++)
+        int total_days = temp_date.day;
+        for(int i=1; i<temp_date.month; i++)
         {
-            struct date_struct tdmy;
-            tdmy.day = tempDate.day;
-            tdmy.month = i;
-            tdmy.year = tempDate.year;
-            totalDays += get_days_for_month(tdmy);
+            struct date_struct temp_day_month_year;
+            temp_day_month_year.day = temp_date.day;
+            temp_day_month_year.month = i;
+            temp_day_month_year.year = temp_date.year;
+            total_days += get_days_for_month(temp_day_month_year);
         }
-        return totalDays;
+        return total_days;
     }
     else
     {
@@ -239,7 +245,7 @@ int day_of_the_year(struct date_struct tempDate)
 *
 * Bezeichner: day_of_week
 *
-* Übergabeparameter: int day, int month, int year
+* Übergabeparameter: struct date_struct temp_date
 *
 * Rückgabewert: int
 *            0 - 6, für den Wochentag Montag = 0 und so weiter ..
@@ -248,35 +254,36 @@ int day_of_the_year(struct date_struct tempDate)
 * Beschreibung: Die Funktion gibt den Wochentag an mit einer zahl von 0-6
 *
 *****/
-int day_of_the_week(struct date_struct tempDate)
+
+int day_of_the_week(struct date_struct temp_date)
 {
-    int dayDifference = 0;
-    if(exists_date(tempDate))
+    int day_difference = 0;
+    if(exists_date(temp_date))
     {
-        if(tempDate.year > 1582)
+        if(temp_date.year > 1582)
         {
-            for(int i=1582; i<tempDate.year; i++)
+            for(int i=1582; i<temp_date.year; i++)
             {
-                struct date_struct tdmy;
-                tdmy.day = tempDate.day;
-                tdmy.month = tempDate.month;
-                tdmy.year = i;
-                dayDifference += (365 + is_leapyear(tdmy));
+                struct date_struct temp_day_month_year;
+                temp_day_month_year.day = temp_date.day;
+                temp_day_month_year.month = temp_date.month;
+                temp_day_month_year.year = i;
+                day_difference += (365 + is_leapyear(temp_day_month_year));
             }
         }
-        if(tempDate.month > 1)
+        if(temp_date.month > 1)
         {
-            for(int i=1; i<tempDate.month; i++)
+            for(int i=1; i<temp_date.month; i++)
             {
-                struct date_struct tdmy;
-                tdmy.day = tempDate.day;
-                tdmy.month = i;
-                tdmy.year = tempDate.year;
-                dayDifference += get_days_for_month(tdmy);
+                struct date_struct temp_day_month_year;
+                temp_day_month_year.day = temp_date.day;
+                temp_day_month_year.month = i;
+                temp_day_month_year.year = temp_date.year;
+                day_difference += get_days_for_month(temp_day_month_year);
             }
         }
-        dayDifference += day;
-        return ((dayDifference + 3) % 7);
+        day_difference += temp_date.day;
+        return ((day_difference + 3) % 7);
     }
     else
     {
